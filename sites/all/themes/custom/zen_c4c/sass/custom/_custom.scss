@@ -1,0 +1,30 @@
+
+//===========================================\\
+//---------------- Desktop ------------------\\
+//===========================================\\
+
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600');
+@import '_fonts.scss';
+
+/**--------------- pages -------------------**/
+@import 'pages/node-type-tools';
+@import 'pages/page-novedades';
+
+/**--------------- blocks ------------------**/
+@import 'blocks/pane-c4c-faq-c4c-faq';
+@import 'blocks/view-display-id-block_1';
+@import 'blocks/view-display-id-block_2';
+@import 'blocks/view-display-id-block_3';
+@import 'blocks/view-display-id-block_4';
+@import 'blocks/view-display-id-block_5';
+
+//===========================================\\
+//---------------- mobile -------------------\\
+//===========================================\\
+
+///**--------------- blocks ------------------**/
+@import 'mobile/blocks/pane-c4c-faq-c4c-faq';
+@import 'mobile/blocks/view-display-id-block_1';
+@import 'mobile/blocks/view-display-id-block_4';
+@import 'mobile/blocks/view-display-id-block_5';
+@import 'mobile/pages/node-type-tools';

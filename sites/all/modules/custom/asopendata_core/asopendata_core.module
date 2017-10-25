@@ -1,0 +1,88 @@
+<?php
+
+
+function asopendata_core_theme(){
+
+  return array(
+  'languaje_switcher' => array(
+     'template' => 'languaje_switcher',
+      'variables' => array(),
+   ),
+   'header_opendata' => array(
+      'template' => 'header',
+       'variables' => array(),
+    ),
+    'footer_opendata' => array(
+       'template' => 'footer',
+        'variables' => array(),
+     )
+  );
+}
+
+function asopendata_core_block_info() {
+  $blocks['languaje'] = array(
+    'info' => t('My Languaje Switcher'),
+  );
+  $blocks['header'] = array(
+    'info' => t('OpenData Header'),
+  );
+  $blocks['footer'] = array(
+    'info' => t('OpenData Footer'),
+  );
+  return $blocks;
+}
+
+
+function asopendata_core_block_view($delta = ''){
+
+  switch ($delta) {
+    case 'languaje':
+      $block['subject'] = t('My Languaje Switcher');
+      $block['content'] = array(
+            '#theme' => 'languaje_switcher'
+            );
+      return $block;
+      break;
+   case 'header':
+        $block['subject'] = t('OpenData Header');
+        $block['content'] = array(
+              '#theme' => 'header_opendata'
+              );
+        return $block;
+        break;
+  case 'footer':
+             $block['subject'] = t('OpenData Footer');
+             $block['content'] = array(
+                   '#theme' => 'footer_opendata'
+                   );
+             return $block;
+             break;
+
+   }
+
+}
+
+/*
+function asopendata_core_block_configure($delta = '') {
+  // This example comes from node.module.
+  $form = array();
+  if ($delta == 'header') {
+    $form['logo_header'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Imagen del logo'),
+      '#default_value' => variable_get('slider_nodequeue', 1),
+     );
+  };
+
+
+  return $form;
+}
+
+*/
+
+function asopendata_core_translate($name, $string, $langcode = NULL) {
+   return function_exists('i18n_string') ? i18n_string($name, $string, array('langcode' => $langcode)) : $string;
+ }
+
+
+?>

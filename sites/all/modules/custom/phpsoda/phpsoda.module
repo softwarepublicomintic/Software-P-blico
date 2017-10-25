@@ -1,0 +1,120 @@
+<?php
+
+
+// PhpSoda is packaged up in a Phar archive which allows us to include the entire library with a single "include."
+// You may also use "include_once," "require," or "require_once"
+include "phpsoda-0.1.0.phar";
+
+// PhpSoda organizes its code inside namespaces; in order to use PhpSoda, you'll have to "use" the namespaces. These
+// three namespaces should suffice for most code.
+use allejo\Socrata\SodaClient;
+use allejo\Socrata\SodaDataset;
+use allejo\Socrata\SoqlQuery;
+
+
+function phpsoda_client($conexion) {
+  /* Crea la conexión a socrata */
+  $url = $conexion['url'];
+  $sc = new SodaClient($url, $token = $conexion['token'], $email = $conexion['email'], $password = $conexion['password']);
+
+  return $sc;
+}
+
+
+/* Implements Socrata Upsert Function  */
+
+function phpsoda_upsert($conexion, $dataset, $JSONData) {
+
+ try {
+   $sc =  phpsoda_client($conexion);
+   $dsup = new SodaDataset($sc,$dataset);
+   //$results = $conexion['password'];
+   $results = $dsup->upsert($JSONData);
+  //$results = $JSONData;
+  return $results;
+  // return "Send -> ".$results;
+ }
+ catch (Exception $e) {
+   return $e->getMessage()."; Data Send -> ".$JSONData;
+ }
+
+
+}
+
+/* Implements Socrata Replace Function  */
+
+function phpsoda_replace($conexion, $dataset, $JSONData) {
+
+  /* Crea la conexión a socrata */
+  $sc =  phpsoda_client($conexion);
+
+  $dsup = new SodaDataset($sc,$dataset);
+  $results = $dsup->replace($JSONData);
+
+  return $results;
+
+}
+
+/* Implements Socrata getdataset Function  */
+function phpsoda_get($conexion, $dataset) {
+
+  $sc =  phpsoda_client($conexion);
+
+  $dsup = new SodaDataset($sc,$dataset);
+  $results = $dsup->getDataset();
+
+  return $results;
+}
+
+
+function phpsoda_select_offline($url,$dataset,$select,$where,$offset,$fieldorder,$ascdesc)
+{
+  // Create a client with information about the API to handle tokens and authentication
+  $sc = new SodaClient($url);
+
+  // Create a SoqlQuery that will be used to filter out the results of a dataset
+  $soql = new SoqlQuery();
+
+
+
+  // Write a SoqlQuery naturally
+if (isset($select))  {
+   $soql->select($select);
+}
+else {
+   $soql->select();
+}
+
+if (isset($where))  {
+   $soql->where($where);
+}
+
+if (isset($offset))  {
+   $soql->offset($offset);
+}
+
+if (isset($fieldorder))  {
+   if (isset($ascdesc))  {
+     if ($ascdesc=="ASC") {
+       $soql->order($fieldorder,SoqlOrderDirection::ASC);
+     }
+     else {
+       $soql->order($fieldorder,SoqlOrderDirection::ASC);
+     }
+   }
+   else {
+      $soql->order($fieldorder,SoqlOrderDirection::ASC);
+   }
+}
+
+  $results = $ds->getDataset($soql);
+
+ $resultsjson = json_encode($results); 
+
+  return $resultsjson;
+
+
+}
+
+
+?>

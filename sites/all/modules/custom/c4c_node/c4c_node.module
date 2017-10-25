@@ -1,0 +1,8 @@
+<?php
+
+/**
+ * Implements hook_form_alter().
+ */
+function c4c_node_form_news_node_form_alter(&$form, &$form_state, $form_id) {
+  drupal_add_js(drupal_get_path('module', 'c4c_node') . '/js/c4c_node.js');
+}

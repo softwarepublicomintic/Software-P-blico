@@ -1,0 +1,101 @@
+// Página principal sección herramientas
+.node-type-tools {
+	background-color: $color-fondo-tools;
+	
+	// URL: http://c4c.seedlabs.co/es/content/usar-los-datos
+	&.page-node-666 {
+		@include tools-colors($color-red-purple);
+	}
+
+	// URL: http://c4c.seedlabs.co/es/content/publicar-conjuntos-de-datos
+	&.page-node-668 {
+		@include tools-colors($color-amarillo-tools);
+	}
+	
+	// URL: http://c4c.seedlabs.co/es/content/desarrollar-usando-los-datos
+	&.page-node-669 {
+		@include tools-colors($color-naranja-tools);
+	}	
+
+	.jspHorizontalBar {
+		height: 30px;
+		background: none;
+		z-index: 20;
+	}
+
+	.jspTrack {
+		background-color: $color-gris-tools;
+	}
+
+	.jspDrag {
+		border-radius: 4px;
+	}
+	
+	.jspContainer {
+		// generamos un borde a la derecha falso
+		&::before,
+		&::after {
+			content: "";
+			width: 15px;
+			height: 100%;
+			background: $color-gris-tools;
+			position: absolute;
+			top: 0;
+			right: 0;
+			z-index: 10;
+		}
+
+		&::before {
+			right: auto;
+			left: 0;
+		}
+	}
+
+	.views-exposed-form {
+		.views-exposed-widget {
+			width: 50%;
+			float: left;
+			padding: 0;
+
+			label {
+				color: $color-red-purple;
+				font-size: 16px;
+				padding-top: 10px;
+			}
+
+			.form-text {
+				height: 45px;
+				font-size: 14px;
+			}
+		}
+
+		label {
+			display: inline-block;
+			vertical-align: top;
+			white-space: nowrap;
+			padding-right: 10px;
+		}
+
+		.views-widget {
+			display: inline-block;
+			vertical-align: top;
+		}
+	}
+
+	.description {
+		font-size: .9em;
+		line-height: 145%;
+	}
+
+	.layout-3col__full {
+		>.pd-1col {
+			.pane-tools,
+			.pane-c4c-faq-c4c-faq {
+				margin: 0 auto;
+				padding: 0 2%;
+				max-width: 1200px;
+				width: 100%;
+			}
+		}
+	}
+}

@@ -1,0 +1,57 @@
+// Página principal sección herramientas
+@media only screen and (max-width: $size-break2) {
+	.node-type-tools {
+		.views-exposed-form .views-exposed-widget {
+			float: none;
+			display: block;
+			width: auto;
+		}
+
+		.jspContainer::before,
+		.jspContainer::after {
+			display: none;
+		}
+	}
+}
+
+@media only screen and (max-width: $size-break1) {
+	.node-type-tools {
+		.views-exposed-form {
+			.views-widget-filter-field_category_tid_1 label {
+				display: none;
+			}
+
+			.views-widget-filter-field_tool_title_value label {
+				width: 48px;
+				text-indent: -9999px;
+				padding: 0;
+				float: left;
+
+				& + .views-widget {
+					float: left;
+					width: 85%;
+					width: calc(100% - 48px);
+				}
+			}
+
+			.chosen-container {
+				width: 100% !important;
+				float: left;
+			}
+
+			.views-exposed-widget {
+				float: left;
+				width: 100%;
+
+				.form-text {
+					display: block;
+					width: 100%;
+				}
+
+				> .views-widget {
+					display: block;
+				}
+			}
+		}
+	}
+}

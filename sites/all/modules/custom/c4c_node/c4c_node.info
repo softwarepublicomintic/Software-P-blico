@@ -1,0 +1,5 @@
+name = C4C Node
+description = Custom module to node section
+core = 7.x
+package = Commons For Colombia
+

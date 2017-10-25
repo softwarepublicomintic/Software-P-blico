@@ -1,0 +1,4 @@
+name = Override path title
+description = Change page title for any path.
+core = 7.x
+package = Commons For Colombia 

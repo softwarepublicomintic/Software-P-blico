@@ -1,0 +1,248 @@
+<?php
+
+function c4c_alter_form_alter(&$form, &$form_state, $form_id)
+{
+
+    switch ($form_id){
+        case 'forum_node_form':
+        case 'lessons_learned_node_form':
+            $form['actions']['submit']['#submit'][] = 'c4c_alter_lessons_learned_node_form_form_submit';
+            break;
+    }
+    if($form_id == "user_login") {
+        $url = $_GET['redirect'];
+        if($url) {
+            $form['#action'] = '#overlay=es/' . $url;
+        }
+    }
+
+    if ($form_id == "event_node_form") {
+        $form["#validate"][] = "c4c_alter_form_validate";
+    }
+
+    if ($form_id == 'gadd_add_member_form') {
+        $form['roles']['#prefix'] = '
+          <div id="descripcion-rol-moderador">' . t('This role allow user to edit content from associated forums, and also the news and events.') . '</div>
+          <div id="descripcion-rol-creador"> ' . t('This role is used to identify those users or user who created or started the project. It is assigned automatically to the creator. Can edit associated content.') . '</div>
+          <div id="descripcion-rol-miembro">' . t('This is the most basic role, it will be associated only as member, without special permissions.') . '</div>
+          <div id="descripcion-rol-admin">' . t('Role with total permissions. Can edit associated content, edit/delete members.') . '</div>
+        ';
+    }
+
+    if ($form_id == 'project_node_form' || $form_id == 'project_application_node_form') {
+      switch($form_id) {
+        case 'project_application_node_form':
+          $value = t('Delete this application');
+          break;
+
+        default:
+          $value = t('Delete this project');
+          /*
+          foreach (element_children($form['field_project_year']) as $key => $field) {
+            $default_value = $form['field_project_year'][$field][$key]['#default_value'];
+            $options = array();
+            for ($i = 1950; $i <= 2050; $i++) {
+              $options[$i] = $i;
+            }
+            $form['field_project_year'][$field][$key]['#type'] = 'select';
+            $form['field_project_year'][$field][$key]['#options'] = $options;
+          }
+          */
+          break;
+      }
+      if (isset($form['actions']['delete'])) {
+        $form['actions']['delete']['#value'] = $value;
+      }
+    }
+
+}
+
+function c4c_alter_lessons_learned_node_form_form_submit($form, &$form_state){
+    if(isset($form_state['values']['field_ref_to']['und'][0]['target_id'])){
+        $form_state['redirect'] = 'node/' . $form_state['values']['field_ref_to']['und'][0]['target_id'];
+    }
+}
+
+function c4c_alter_form_validate(&$form, &$form_state, $form_id) {
+  if (strlen($form['field_event_dates']['und'][0]['#value']['value']['time']) == 0) {
+       // form_set_error('', t('Error : The hour entered is incorrect '));
+  }
+  /*
+  if (isset($form_state['values']['field_event_dates'])) {
+    if (isset($form_state['values']['field_event_dates']['und'][0]['show_todate']) && $form_state['values']['field_event_dates']['und'][0]['show_todate']) {
+      $value = $form_state['values']['field_event_dates']['und'][0]['value'];
+      $value2 = $form_state['values']['field_event_dates']['und'][0]['value2'];
+      list($year, $month, $day) = explode('-', $value);
+      list($year2, $month2, $day2) = explode('-', $value2);
+      $timestamp = mktime(0, 0, 0, $month, $day, $year);
+      $timestamp2 = mktime(0, 0, 0, $month2, $day2, $year2);
+      if ($timestamp2 < $timestamp) {
+        form_set_error('field_event_dates', t('The end date must be greater than start date.'));
+      }
+    }
+  }
+  */
+}
+
+/**
+ * Implements hook_date_combo_pre_validate_alter().
+ *
+ * This hook lets us alter the element or the form_state before the rest
+ * of the date_combo validation gets fired.
+ */
+function c4c_alter_date_combo_pre_validate_alter(&$element, &$form_state, $context) {
+  c4c_alter_value($element, $form_state);
+}
+
+/**
+ * Implements hook_date_combo_validate_date_start_alter().
+ *
+ * This hook lets us alter the local date objects
+ * created by the date_combo validation before they are
+ * converted back to the database timezone and stored.
+ */
+function c4c_alter_date_combo_validate_date_start_alter(&$date, &$form_state, $context) {
+  if (empty($context['element']['#value']['value']['time'])) {
+    $date->setTime(0, 0, 0);
+  }
+}
+
+/**
+ * Implements hook_date_combo_validate_date_end_alter().
+ *
+ * This hook lets us alter the local date objects
+ * created by the date_combo validation before
+ * they are converted back to the database timezone and stored.
+ */
+function c4c_alter_date_combo_validate_date_end_alter(&$date, &$form_state, $context) {
+  if (empty($context['element']['#value']['value']['time'])) {
+    $date->setTime(0, 0, 0);
+  }
+}
+
+/**
+ * Implements hook_date_select_pre_validate_alter().
+ *
+ * This hook lets us alter the element or the form_state before the rest
+ * of the date_select validation gets fired.
+ */
+function c4c_alter_date_text_pre_validate_alter(&$element, &$form_state, &$input) {
+  c4c_alter_value($element, $form_state);
+}
+
+/**
+ * Implements hook_date_select_pre_validate_alter().
+ *
+ * This hook lets us alter the element or the form_state before the rest
+ * of the date_select validation gets fired.
+ */
+function c4c_alter_date_select_pre_validate_alter(&$element, &$form_state, &$input) {
+  c4c_alter_value($element, $form_state);
+}
+
+/**
+ * Implements hook_date_select_pre_validate_alter().
+ *
+ * This hook lets us alter the element or the form_state before the rest
+ * of the date_popup validation gets fired.
+ */
+function c4c_alter_date_popup_pre_validate_alter(&$element, &$form_state, &$input) {
+  c4c_alter_value($element, $form_state);
+}
+
+/**
+ * A helper function evivienda_alter_value().
+ *
+ * To check if the all day flag is set on the parent of an
+ * element, and adjust the date_format accordingly so the missing time will
+ * not cause validation errors.
+ */
+function c4c_alter_value(&$element, $form_state) {
+  if (empty($element['#value']['value']['time']) && isset($element['#date_format'])) {
+    $element['#date_format'] = date_part_format('date', $element['#date_format']);
+  }
+}
+
+/**
+ * Implements hook_library_alter().
+ */
+function c4c_alter_library_alter(&$libraries, $module) {
+  if ($module == 'chosen') {
+    if (isset($libraries['drupal.chosen']['js'][0]['data']['chosen']['options'])) {
+      $placeholder_text_multiple = $libraries['drupal.chosen']['js'][0]['data']['chosen']['options']['placeholder_text_multiple'];
+      $placeholder_text_single = $libraries['drupal.chosen']['js'][0]['data']['chosen']['options']['placeholder_text_single'];
+      $no_results_text = $libraries['drupal.chosen']['js'][0]['data']['chosen']['options']['no_results_text'];
+      // Now, translate strings:
+      $libraries['drupal.chosen']['js'][0]['data']['chosen']['options']['placeholder_text_multiple'] = t($placeholder_text_multiple);
+      $libraries['drupal.chosen']['js'][0]['data']['chosen']['options']['placeholder_text_single'] = t($placeholder_text_single);
+      $libraries['drupal.chosen']['js'][0]['data']['chosen']['options']['no_results_text'] = t($no_results_text);
+    }
+  }
+}
+
+/**
+ * Implements hook_form_views_exposed_form_alter().
+ */
+function c4c_alter_form_views_exposed_form_alter(&$form, &$form_state) {
+  if($form['#id'] == 'views-exposed-form-c4c-news-events-block-4') {
+    $form['case-of-success']['#options']['All'] = t('All');
+    $form['case-of-success']['#options'][1] = t('Is case of success');
+    $form['project-type']['#options']['All'] = t('Project type');
+  }
+}
+/**
+ * Implements hook_views_query_alter().
+ */
+function c4c_alter_views_query_alter(&$view, &$query){
+
+  // Add condition to not count admin paths
+  if($view->name == 'c4c_access_log__std' && $view->current_display == 'block'){
+    $query->where[1]['conditions'][0]['value'] = '%admin%';
+    $query->where[1]['conditions'][0]['operator'] = 'NOT LIKE';
+
+  }
+
+  // Add condition to show only projects or applications with daatasets or challenges approved
+  // If the filter isn't used, the pusblish filter is removed
+  if(($view->name == 'c4c_applications_std' && $view->current_display == 'block_3') ||
+     ($view->name == 'c4c_applications_std' && $view->current_display == 'block_1') ||
+     ($view->name == 'c4c_projects_std' && $view->current_display == 'block_1') ||
+     ($view->name == 'c4c_projects_std' && $view->current_display == 'block_3')
+     ){
+
+
+    if( !isset($view->exposed_data['field_link_pa_type_value_1']['CHALLENGE'])){
+
+      foreach ($query->where as $key => $value) {
+       foreach ($value['conditions'] as $key1 => $value1) {
+          if( is_string($value1['field']) && $value1['field'] == 'field_collection_item_field_data_field_collection_links_1__field_data_field_link_status.field_link_status_value') {
+            // Remove Table Queue
+            unset($query->table_queue['field_collection_item_field_data_field_collection_links_1__field_data_field_link_status']);
+            // Remove Query
+            unset($query->where[$key]);
+          }
+        }
+      }
+    }
+
+
+    if( !isset($view->exposed_data['field_link_pa_type_value']['DATASET'])) {
+
+      foreach ($query->where as $key => $value) {
+        foreach ($value['conditions'] as $key1 => $value1) {
+          if(is_string($value1['field'])  && $value1['field'] == 'field_collection_item_field_data_field_collection_links__field_data_field_link_status.field_link_status_value') {
+             // Remove Table Queue
+            unset($query->table_queue['field_collection_item_field_data_field_collection_links__field_data_field_link_status']);
+
+            // Remove Query
+            unset($query->where[$key]);
+          }
+        }
+      }
+    }
+
+    //kpr($query);
+
+  }
+}
+

@@ -1,0 +1,142 @@
+<?php
+
+/**
+ * Main module file.
+ */
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function override_path_title_preprocess_page(&$variables, $hook) {
+  global $language ;
+  $current_language = $language->language;
+  
+  $path = current_path();
+  $result = override_path_title_search($path, array('languages' => array('any', $current_language), 'operator' => 'IN'));
+  if (isset($result['title'])) {
+    drupal_set_title($result['title']);
+  }
+}
+
+/**
+ * Implements hook_menu().
+ */
+function override_path_title_menu() {
+  $items['admin/config/user-interface/override-path-title'] = array(
+    'title' => 'Override path title',
+    'description' => 'Configure settings for page titles.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('override_path_title_settings'),
+    'access arguments' => array('administer override_path_title'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'includes/override_path_title.settings.inc',
+  );
+  $items['admin/config/user-interface/override-path-title/%override_path_title/edit'] = array(
+    'title' => 'Edit overriden title',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('override_path_title_edit', 4),
+    'access arguments' => array('administer override_path_title'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'includes/override_path_title.settings.inc',
+  );
+  $items['admin/config/user-interface/override-path-title/%override_path_title/delete'] = array(
+    'title' => 'Delete overriden title',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('override_path_title_delete', 4),
+    'access arguments' => array('administer override_path_title'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'includes/override_path_title.settings.inc',
+  );
+  return $items;
+}
+
+/**
+ * Function to load an object.
+ * @param Integer $override_path_title - Database internal ID for a record.
+ * @see admin/config/user-interface/override-path-title/%override_path_title/edit.
+ */
+function override_path_title_load($override_path_title) {
+  if (is_numeric($override_path_title)) {
+    $result = db_select('override_path_title_title', 'ot')
+      ->fields('ot')
+      ->condition('opl', $override_path_title, '=')
+      ->execute()
+      ->fetchAssoc();
+    return $result;
+  }
+  return NULL;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function override_path_title_permission() {
+  return array(
+    'administer override_path_title' => array(
+      'title' => t('Administer Override path title'),
+      'description' => t('Configure settings for title overriding.'),
+    ),
+  );
+}
+
+/**
+ * Function to save a link.
+ * @param Array $data - Data to be stored into the database.
+ */
+function override_path_title_save($data = array()) {
+  $id = NULL;
+  if (count($data) > 0) {
+    switch ($data['option']) {
+      case 'save':
+        $opl = db_insert('override_path_title_title')
+          ->fields(array(
+           'path' => $data['path'],
+           'title' => $data['title'],
+           'language' => $data['language'],
+        ))
+        ->execute();
+        $id = $opl;
+        break;
+       
+      case 'update':
+        $num_updated = db_update('override_path_title_title')
+          ->fields(array(
+           'path' => $data['path'],
+           'title' => $data['title'],
+           'language' => $data['language'],
+        ))
+        ->condition('opl', $data['id'], '=')
+        ->execute();
+        $id = $num_updated > 0 ? $data['id'] : 'NONE';
+        break;
+        
+      case 'delete':
+        $num_deleted = db_delete('override_path_title_title')
+          ->condition('opl', $data['id'], '=')
+          ->execute();
+        $id = $num_deleted > 0 ? $data['id'] : 'NONE';
+        break;
+    }
+  }
+  return $id;
+}
+
+/**
+ * Seach current path in overriden titles table.
+ * @param String $path - The path to search for.
+ * @param Array $conf - Extra settings.
+ */
+function override_path_title_search($path, $conf = array()) {
+  if (count($conf) > 0) {
+    $result = db_select('override_path_title_title', 'ot')
+      ->fields('ot')
+      ->condition('path', $path, '=')
+      ->condition('language', $conf['languages'], $conf['operator'])
+      ->orderBy('opl', 'DESC')
+      ->range(0, 2)
+      ->execute()
+      ->fetchAssoc();
+    return $result;
+  }
+  return NULL;
+}

@@ -1,0 +1,39 @@
+.node-type-tools {
+	.view-display-id-block_5 {
+		padding: 45px 35px;
+		background: $color-gris-tools;
+
+		.views-row {
+			overflow: hidden;
+		}
+
+		.views-fieldset {
+			float: left;
+			width: 40%;
+		}
+
+		.views-field-field-tool-youtube-url {
+			float: left;
+			width: 60%;
+			text-align: right;
+			margin-right: 0;
+		}
+
+		.views-field-field-tool-title {
+			margin-bottom: 10px;
+
+			.field-content {
+				color: $color-red-purple;
+				font-weight: bold;
+				font-size: 1.5em;
+				line-height: 1.3;
+			}
+		}
+
+		.views-field-field-tool-description {
+			color: black;
+			font-size: 1.2em;
+			line-height: 1.3;
+		}
+	}
+}

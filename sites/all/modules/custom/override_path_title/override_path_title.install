@@ -1,0 +1,45 @@
+<?php
+  /**
+   *Install file.
+   *
+   */
+   
+/**
+ * Implements hook_schema();
+ */
+function override_path_title_schema() {
+  $schema['override_path_title_title'] = array(
+    'description' => 'The new titles according to a path.',
+    'fields' => array(
+      'opl' => array(
+        'description' => 'ID.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'path' => array(
+        'description' => 'The path which the title will be applied to.',
+        'type' => 'varchar',
+        'length' => 450,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'title' => array(
+        'description' => 'The title for this page.',
+        'type' => 'varchar',
+        'length' => 500,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'language' => array(
+        'description' => 'The title language.',
+        'type' => 'varchar',
+        'length' => 5,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'primary key' => array('opl'),
+  );
+  return $schema;
+}

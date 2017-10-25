@@ -1,0 +1,12 @@
+# Ignore configuration files that may contain sensitive information.
+sites/*/settings*.php
+
+# Ignore paths that contain user-generated content.
+sites/*/files
+sites/*/private
+sites/all/themes/custom/zen_c4c/node_modules
+sites/all/themes/custom/zen_c4c/css/styles.css.map
+sites/all/themes/custom/zen_c4c/css/style-guide/*
+sites/all/themes/custom/zen_c4c/styleguide/*
+.idea
+.DS_Store

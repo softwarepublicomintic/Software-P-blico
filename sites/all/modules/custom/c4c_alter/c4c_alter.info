@@ -1,0 +1,5 @@
+name = C4C alter
+description = Custom module alter
+core = 7.x
+package = Commons For Colombia
+

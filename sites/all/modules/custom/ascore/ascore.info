@@ -1,0 +1,4 @@
+name = AS Common Core
+description = Métodos y funciones para funcionalidades Commons
+package = Asesoftware
+core = 7.x

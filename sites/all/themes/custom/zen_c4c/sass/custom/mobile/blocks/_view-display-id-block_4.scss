@@ -1,0 +1,82 @@
+@media only screen and (max-width: $size-break2) {
+	.node-type-tools {
+		.view-display-id-block_4 {
+			 > .view-content {
+				padding-bottom: 15px;
+
+				.views-row {
+					padding: 0 20px;
+					margin: 0 0 10px;
+				}
+
+				.views-field-field-tool-youtube-url {
+					float: left;
+					margin-right: 10px;
+				}
+			}
+
+			.views-widget-filter-field_tool_title_value {
+				text-align: center;
+			}
+
+			.views-exposed-form {
+				text-align: center;
+
+				.views-exposed-widget {
+					margin-bottom: 10px;
+				}
+
+				label {
+					padding-top: 10px;
+				}
+
+				label,
+				.views-widget {
+					display: inline-block;
+					vertical-align: top;
+				}
+			}
+		}
+	}
+}
+
+@media only screen and (max-width: $size-break1) {
+	.node-type-tools {
+		.view-display-id-block_4 {
+			 > .view-content {
+				.views-field-field-tool-youtube-url {
+					max-width: 40%;
+				}
+
+				.views-field-field-tool-title {
+					.field-content {
+						font-size: 1em;
+					}
+				}
+			}
+		}
+	}
+}
+
+@media only screen and (max-width: 360px) {
+	.node-type-tools {
+		.view-display-id-block_4 {
+			.view-filters {
+				padding: 1em 2%;
+				margin-bottom: 1em;
+
+				.views-exposed-widgets {
+					margin: 0;
+
+					#edit-field-tool-title-value-wrapper {
+						margin: 0;
+					}
+
+					.views-submit-button {
+						display: none;
+					}
+				}
+			}
+		}
+	}
+}

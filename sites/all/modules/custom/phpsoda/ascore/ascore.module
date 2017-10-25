@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * Implements hook_menu().
+ */
+function ascore_menu() {
+    $items['rss/subscribe'] = array(
+      'title' => 'Subscribe to RSS',
+      'page callback' => 'Subscribe_to_rss',
+      'access callback' => TRUE,
+      'file' => 'includes/subscriberss.inc',
+    );
+
+    $items['rss/tosubscribe'] = array(
+      'title' => 'Subscribe to RSS',
+      'page callback' => 'to_Subscribe_to_rss',
+      'access callback' => TRUE,
+      'file' => 'includes/tosubscriberss.inc',
+    );
+
+    return $items;
+
+}
+
+
+
+// Crea las url para la conexion por redes sociales
+
+?>
